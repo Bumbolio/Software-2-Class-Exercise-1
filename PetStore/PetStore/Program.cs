@@ -1,12 +1,15 @@
-﻿using PetStore;
+﻿using Microsoft.Extensions.DependencyInjection;
+using PetStore;
 using PetStore.Logic;
 using PetStore.Models;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-var productLogic = new ProductLogic();
 
 string userInput = DisplayMenuAndGetInput();
+
+var services = CreateServiceCollection();
+var productLogic = services.GetService<IProductLogic>();
 
 while (userInput.ToLower() != "exit")
 {
@@ -73,4 +76,10 @@ static string DisplayMenuAndGetInput()
     Console.WriteLine("Type 'exit' to quit");
 
     return Console.ReadLine();
+}
+
+static IServiceProvider CreateServiceCollection() { 
+    return new ServiceCollection()
+        .AddTransient<IProductLogic, ProductLogic>()
+        .BuildServiceProvider();
 }
